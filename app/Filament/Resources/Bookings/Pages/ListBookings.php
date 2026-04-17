@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Bookings\Pages;
 use App\Filament\Resources\Bookings\BookingResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Model;
 
 class ListBookings extends ListRecords
 {
@@ -13,7 +14,21 @@ class ListBookings extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->using(function (array $data, string $model) {
+                    foreach($data['time'] as $time)
+                    {
+                        $content = [
+                            'date' => $data['date'],
+                            'name' => $data['name'],
+                            'time' => $time,
+                            'email' => $data['email']
+                        ];
+                        $model::create($content);
+                    }
+
+                }),
         ];
     }
+
 }

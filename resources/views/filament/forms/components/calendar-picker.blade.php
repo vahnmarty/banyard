@@ -4,6 +4,7 @@
 >
     <div
         x-data="{
+        state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$getStatePath()}')") }},
         month: @js($getMonth()),
         year: @js($getYear()),
         allMonths: @js($getAllDays()) || [],
@@ -38,6 +39,12 @@
             } else {
                 this.month--;
             }
+        },
+
+        selectDate(day) {
+            if (!day) return;
+
+            this.state = `${this.year}-${String(this.month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         }
     }"
     x-init="init()"
@@ -105,6 +112,10 @@
                         <button
                             type="button"
                             class="w-full h-full hover:bg-gray-100"
+                            @click="selectDate(day)"
+                            :class="{
+                                'bg-primary-500 text-white': state === `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`
+                            }"
                             x-text="day"
                         ></button>
                     </template>

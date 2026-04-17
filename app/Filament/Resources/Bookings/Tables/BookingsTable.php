@@ -2,7 +2,10 @@
 
 namespace App\Filament\Resources\Bookings\Tables;
 
+use App\Models\Booking;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -24,10 +27,10 @@ class BookingsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('date')
-                    ->date()
+                    ->dateTime('F d, Y')
                     ->sortable(),
                 TextColumn::make('time')
-                    ->time()
+                    ->time('g:i a')
                     ->sortable(),
                 TextColumn::make('name')
                     ->searchable(),
@@ -35,11 +38,14 @@ class BookingsTable
                     ->label('Email address')
                     ->searchable(),
                 TextColumn::make('phone')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('club')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('players_count')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('confirmed_at')
                     ->dateTime()
                     ->sortable(),
@@ -51,8 +57,15 @@ class BookingsTable
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
+                Action::make('confirm')
+                    ->requiresConfirmation()
+                    ->hidden(fn(Booking $record) => $record->isConfirmed())
+                    ->action(function (Booking $record): void {
+                        $record->confirmed_at = now();
+                        $record->save();
+                    }),
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
