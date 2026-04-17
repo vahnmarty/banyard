@@ -93,20 +93,6 @@ new class extends Component
                         </table>
                     </div>
 
-                    <div class="mt-8">
-                        <x-filament::callout
-                            icon="heroicon-o-information-circle"
-                            color="warning"
-                        >
-                            <x-slot name="heading">
-                                After Midnight Schedule
-                            </x-slot>
-
-                            <x-slot name="description">
-                                12AM to 4AM is exclusive to friends and relatives only.
-                            </x-slot>
-                        </x-filament::callout>
-                    </div>
                 </div>
             </div>
 
@@ -136,7 +122,7 @@ new class extends Component
 
         </div>
 
-        <footer class="text-sm py-3 mt-16">
+        <footer class="text-sm py-3 mt-8">
             <div class="text-center">Made with 🩷 by <a href="https://www.instagram.com/vahn.marty" class="underline">@vahnmarty</a></div>
         </footer>
     </div>
