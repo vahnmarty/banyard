@@ -14,7 +14,7 @@ return [
     */
 
     'component_locations' => [
-        resource_path('views/components'),
+        //resource_path('views/components'),
         resource_path('views/livewire'),
     ],
 
@@ -70,7 +70,7 @@ return [
 
     'make_command' => [
         'type' => 'sfc', // Options: 'sfc', 'mfc', 'class'
-        'emoji' => true, // Options: true, false
+        'emoji' => false, // Options: true, false
         'with' => [
             'js' => false,
             'css' => false,
