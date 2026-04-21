@@ -64,7 +64,6 @@ class BookingsTable
                         $record->confirmed_at = now();
                         $record->save();
                     }),
-                EditAction::make(),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
