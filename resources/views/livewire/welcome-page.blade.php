@@ -125,7 +125,7 @@ new class extends Component
                         <a href="{{ url('/') }}" class="font-bold text-xl md:text-2xl">Banyard Pickleball</a>
 
                         <div>
-                            <x-filament::button tag="a" href="https://calendly.com/vahnmarty/banyard-pickleball">Book Now</x-filament::button>
+                            <x-filament::button tag="a" target="_blank" href="https://calendly.com/vahnmarty/banyard-pickleball">Book Now</x-filament::button>
                         </div>
                     </header>
                 </div>
