@@ -120,24 +120,24 @@ new class extends Component
         <div>
 
             <div class="bg-white border-b shadow-sm">
-                <div class="max-w-6xl mx-auto px-8">
+                <div class="max-w-6xl mx-auto px-6 md:px-8">
                     <header class="flex justify-between py-6 items-center">
-                        <a href="{{ url('/') }}" class="font-bold text-2xl">Banyard Pickleball</a>
+                        <a href="{{ url('/') }}" class="font-bold text-xl md:text-2xl">Banyard Pickleball</a>
 
                         <div>
-                            <x-filament::button tag="a" href="{{ url('/book') }}">Book Now</x-filament::button>
+                            <x-filament::button tag="a" href="https://calendly.com/vahnmarty/banyard-pickleball">Book Now</x-filament::button>
                         </div>
                     </header>
                 </div>
 
             </div>
 
-            <div class="max-w-6xl mx-auto px-8 pt-8">
+            <div class="max-w-6xl mx-auto px-6 md:px-8 pt-8">
 
                 <div>
                     <div class="flex items-center gap-2">
-                        <x-filament::icon icon="heroicon-o-calendar-days" class="size-10 text-info-500"/>
-                        <h1 class="font-bold text-3xl">Schedule</h1>
+                        <x-filament::icon icon="heroicon-o-calendar-days" class="size-8 md:size-10 text-info-500"/>
+                        <h1 class="font-bold text-xl md:text-3xl">Schedule</h1>
                     </div>
                     <p class="mt-4 font-semibold">{{ date('F d', strtotime($day1)) }} - {{ date('F d', strtotime($day7)) }}</p>
                     <div class="border-t-4 mt-2 border-info-500 w-10"></div>
@@ -151,7 +151,7 @@ new class extends Component
 
                                 <thead class="bg-slate-50 border-b">
                                     <tr>
-                                        <th class="p-4 text-left text-gray-600 font-medium sticky left-0  z-20">
+                                        <th class="p-4 text-left text-gray-600 font-medium sticky left-0  z-20 bg-slate-50">
                                             <div class="flex gap-2">
                                                 <x-filament::icon icon="heroicon-o-clock" color="primary" class="text-info-500"/>
                                                 <span>Time</span>
@@ -223,19 +223,19 @@ new class extends Component
                     <li>
                         <a href="https://facebook.com/banyard.pb" class="flex items-center gap-2">
                             <img src="{{ asset('img/facebook.png') }}" alt="facebook" class="size-5">
-                            <span class="text-sm">@banyard.pb</span>
+                            <span class="text-sm hidden md:inline-block">@banyard.pb</span>
                         </a>
                     </li>
                     <li>
                         <a href="https://instagram.com/banyard.pb" class="flex items-center gap-2">
                             <img src="{{ asset('img/instagram.png') }}" alt="instagram" class="size-5">
-                            <span class="text-sm">@banyard.pb</span>
+                            <span class="text-sm hidden md:inline-block">@banyard.pb</span>
                         </a>
                     </li>
                     <li>
                         <a href="https://reclub.co/clubs/@banyard-pickleball" class="flex items-center gap-2">
                             <img src="{{ asset('img/reclub.png') }}" alt="reclub" class="size-5">
-                            <span class="text-sm">@banyard-pickleball</span>
+                            <span class="text-sm hidden md:inline-block">@banyard-pickleball</span>
                         </a>
                     </li>
                 </ul>

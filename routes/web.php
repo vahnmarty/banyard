@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::livewire('/', 'welcome-page');
+Route::livewire('/', 'welcome-page')->name('welcome');
 Route::livewire('/book', 'booking-page');
 
 
