@@ -221,19 +221,19 @@ new class extends Component
             <div class="bg-slate-300 py-3">
                 <ul class="mt-2 space-y-2   md:flex-row flex xl:gap-x-20 gap-x-6 justify-center">
                     <li>
-                        <a href="https://facebook.com/banyard.pb" class="flex items-center gap-2">
+                        <a target="_blank" href="https://facebook.com/banyard.pb" class="flex items-center gap-2">
                             <img src="{{ asset('img/facebook.png') }}" alt="facebook" class="size-5">
                             <span class="text-sm hidden md:inline-block">@banyard.pb</span>
                         </a>
                     </li>
                     <li>
-                        <a href="https://instagram.com/banyard.pb" class="flex items-center gap-2">
+                        <a target="_blank" href="https://instagram.com/banyard.pb" class="flex items-center gap-2">
                             <img src="{{ asset('img/instagram.png') }}" alt="instagram" class="size-5">
                             <span class="text-sm hidden md:inline-block">@banyard.pb</span>
                         </a>
                     </li>
                     <li>
-                        <a href="https://reclub.co/clubs/@banyard-pickleball" class="flex items-center gap-2">
+                        <a target="_blank" href="https://reclub.co/clubs/@banyard-pickleball" class="flex items-center gap-2">
                             <img src="{{ asset('img/reclub.png') }}" alt="reclub" class="size-5">
                             <span class="text-sm hidden md:inline-block">@banyard-pickleball</span>
                         </a>
