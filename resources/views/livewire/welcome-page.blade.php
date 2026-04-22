@@ -15,6 +15,8 @@ new class extends Component
 
     public $days;
 
+    public $index = 0;
+
     public function mount()
     {
         $this->time_slots = $this->getTimeSlots();
@@ -27,6 +29,7 @@ new class extends Component
         $this->bookings = $this->getBookings();
 
         $this->days = $this->getDaysArray();
+
     }
 
     public function getDaysArray()
@@ -78,8 +81,15 @@ new class extends Component
         $days = [];
 
         for ($i = 0; $i < 7; $i++) {
-            $days[] = $startOfWeek->format('Y-m-d');
+            $date = $startOfWeek->format('Y-m-d');
+
+            $days[] = $date;
+
             $startOfWeek->modify('+1 day');
+
+            if($date == date('Y-m-d')){
+                $this->index = $i;
+            }
         }
 
         return $days;
@@ -179,9 +189,9 @@ new class extends Component
                                             </td>
 
                                             {{-- CELLS --}}
-                                            @foreach($bookingArray as $booking)
+                                            @foreach($bookingArray as $ii => $booking)
                                                 @php
-                                                    $isToday = $booking && $booking['date'] == date('Y-m-d');
+                                                    $isToday =  ($ii == $index);
                                                 @endphp
 
                                                 <td class="p-3 text-center {{ $isToday ? 'bg-success-100' : '' }}">
