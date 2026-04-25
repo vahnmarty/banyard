@@ -65,6 +65,23 @@
             @endif
         @endif
 
+        @if(count($options) <= 0)
+        <div class="mt-4">
+            <x-filament::callout
+                icon="heroicon-o-x-circle"
+                color="danger"
+            >
+                <x-slot name="heading">
+                    No slots available.
+                </x-slot>
+
+                <x-slot name="description">
+                    Please select different date.
+                </x-slot>
+            </x-filament::callout>
+        </div>
+        @endif
+
         <div
             {{
                 $getExtraAttributeBag()
@@ -94,7 +111,7 @@
                     @endif
                     class="fi-fo-checkbox-list-option-ctn"
                 >
-                    <label class="fi-fo-checkbox-list-option">
+                    <label class="fi-fo-checkbox-list-option fi-checkbox-list-button group">
                         <input
                             type="checkbox"
                             {{

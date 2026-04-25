@@ -82,3 +82,15 @@ select:focus[data-flux-control] {
 .table-td{
     @apply border border-gray-200 px-3 py-2 text-center;
 }
+
+
+.fi-checkbox-list-button{
+    @apply bg-white px-3 py-2 border rounded-md cursor-pointer hover:bg-primary-500 hover:text-white;
+
+    input{
+
+    }
+    .fi-fo-checkbox-list-option-label{
+        @apply  group-hover:text-white;
+    }
+}

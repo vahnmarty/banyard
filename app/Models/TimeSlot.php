@@ -22,4 +22,9 @@ class TimeSlot extends Model
     {
         return Carbon::createFromFormat('H:i:s', $this->time)->format('g:i A');
     }
+
+    public function scopeFromDate()
+    {
+
+    }
 }

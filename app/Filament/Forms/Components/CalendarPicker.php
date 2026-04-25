@@ -2,6 +2,7 @@
 
 namespace App\Filament\Forms\Components;
 
+use Carbon\Carbon;
 use Filament\Forms\Components\Field;
 
 class CalendarPicker extends Field
@@ -10,6 +11,8 @@ class CalendarPicker extends Field
 
     protected ?int $month = null;
     protected ?int $year = null;
+    public $min_date = null;
+    public $max_date = null;
 
     public function month(?int $month): static
     {
@@ -21,6 +24,28 @@ class CalendarPicker extends Field
     {
         $this->year = $year;
         return $this;
+    }
+
+    public function minDate($date): static
+    {
+        $this->min_date = $date;
+        return $this;
+    }
+
+    public function maxDate($date): static
+    {
+        $this->max_date = $date;
+        return $this;
+    }
+
+    public function getMinDate()
+    {
+        return $this->min_date ?? date('Y-m-d');
+    }
+
+    public function getMaxDate()
+    {
+        return $this->max_date ?? Carbon::now()->addDays(30)->format('Y-m-d');
     }
 
     public function getMonth(): int
@@ -37,6 +62,8 @@ class CalendarPicker extends Field
     {
         return date("F Y", mktime(0, 0, 0, $this->getMonth(), 1, $this->getYear()));
     }
+
+
 
     /**
      * Generate full year calendar structure

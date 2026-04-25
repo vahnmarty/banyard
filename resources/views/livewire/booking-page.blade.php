@@ -1,13 +1,210 @@
 <?php
 
+use App\Filament\Forms\Components\CalendarPicker;
+use App\Filament\Forms\Components\CheckboxListButton;
+use App\Models\Appointment;
+use App\Models\Booking;
+use App\Models\TimeSlot;
 use Livewire\Component;
+use Carbon\Carbon;
+use Filament\Forms\Components\Radio;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Grid;
+use Illuminate\Contracts\View\View;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Get;
+use Illuminate\Support\Facades\DB;
 
-new class extends Component
+new class extends Component implements HasSchemas
 {
-    //
+    use InteractsWithSchemas;
+
+
+    public $day1, $day7;
+
+    public $data = [];
+
+    public function mount()
+    {
+        $this->form->fill();
+
+    }
+
+    public function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Grid::make(2)
+                    ->schema([
+                        CalendarPicker::make('date')
+                            ->label("Select Date")
+                            ->year(date('Y'))
+                            ->minDate(date('Y-m-d'))
+                            ->maxDate(Carbon::now()->addDays(30)->format('Y-m-d'))
+                            ->required()
+                            ->live(),
+                        CheckboxListButton::make('time')
+                            ->label('Time Slot')
+                            ->columns(2)
+                            ->hidden(fn(Get $schemaGet) => $schemaGet('date') == null)
+                            ->options(function(Get $schemaGet){
+                                $date = $schemaGet('date');
+
+                                if(filled($date)){
+                                    $bookedTimes = Booking::where('date', $date)
+                                        ->get()
+                                        ->pluck('time')
+                                        ->toArray();
+
+                                    $slots =  TimeSlot::active()
+                                        ->whereNotIn('time', $bookedTimes)
+                                        ->get()
+                                        ->pluck('formatted_time', 'time')
+                                        ->toArray();
+
+                                    return $slots;
+                                }
+
+                                return [];
+
+                            })
+                            ->required()
+                            ->rules(['max:3'])
+                            ->validationMessages([
+                                'max' => 'Maximum of 3 slots per booking.'
+                            ]),
+                    ]),
+
+                TextInput::make('name')
+                    ->maxLength(72)
+                    ->required(),
+                TextInput::make('club')
+                    ->label('Name of your Club/Group/Organization')
+                    ->maxLength(72)
+                    ->placeholder('(Optional)'),
+                Radio::make('players_count')
+                    ->label('Number of Players')
+                    ->options([
+                        '1-3' => '1-3',
+                        '4-8' => '4-8',
+                        '9+' => '9+'
+                    ]),
+                TextInput::make('email')
+                    ->required()
+                    ->email()
+                    ->placeholder("Please enter a valid email address"),
+            ])
+            ->statePath('data');
+    }
+
+
+
+    public function submit()
+    {
+        $data = $this->form->getState();
+
+        DB::beginTransaction();
+
+        try {
+
+            $app = new Appointment;
+            $app->name = $data['name'];
+            $app->email = $data['email'];
+            $app->save();
+
+            foreach($data['time'] as $time)
+            {
+                $booking = new Booking;
+                $booking->appointment_id = $app->getKey();
+                $booking->date = $data['date'];
+                $booking->time = $time;
+                $booking->name = $data['name'];
+                $booking->email = $data['email'];
+                $booking->club = $data['club'];
+                $booking->players_count = $data['players_count'];
+                $booking->save();
+            }
+
+            DB::commit();
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+            throw $th;
+        }
+    }
 };
 ?>
 
 <div>
-    {{-- Happiness is not something readymade. It comes from your own actions. - Dalai Lama --}}
+    <div class="bg-neutral-100">
+
+        <div>
+
+            <div class="bg-white border-b shadow-sm">
+                <div class="max-w-6xl mx-auto px-6 md:px-8">
+                    <header class="flex justify-between py-6 items-center">
+                        <a href="{{ url('/') }}" class="font-bold text-xl md:text-2xl">Banyard Pickleball</a>
+
+                        <div>
+
+                        </div>
+                    </header>
+                </div>
+
+            </div>
+
+            <div class="max-w-6xl mx-auto px-3 md:px-8 pt-8">
+
+                <div>
+                    <div class="flex items-center gap-2">
+                        <x-filament::icon icon="heroicon-o-chat-bubble-left-ellipsis" class="size-8 md:size-10 text-info-500"/>
+                        <h1 class="font-bold text-xl md:text-3xl">Booking Form</h1>
+                    </div>
+                </div>
+
+                <div class="mt-8 mb-16 bg-white p-4 md:p-8 rounded-md shadow-md">
+                    <form wire:submit.prevent="submit">
+                        {{  $this->form }}
+
+                        <div class="mt-8">
+                            <x-filament::button type="submit" size="xl">Submit</x-filament::button>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+
+
+            <div class="bg-slate-300 py-3">
+                <ul class="mt-2 space-y-2   md:flex-row flex xl:gap-x-20 gap-x-6 justify-center">
+                    <li>
+                        <a target="_blank" href="https://facebook.com/banyard.pb" class="flex items-center gap-2">
+                            <img src="{{ asset('img/facebook.png') }}" alt="facebook" class="size-5">
+                            <span class="text-sm hidden md:inline-block">@banyard.pb</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://instagram.com/banyard.pb" class="flex items-center gap-2">
+                            <img src="{{ asset('img/instagram.png') }}" alt="instagram" class="size-5">
+                            <span class="text-sm hidden md:inline-block">@banyard.pb</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://reclub.co/clubs/@banyard-pickleball" class="flex items-center gap-2">
+                            <img src="{{ asset('img/reclub.png') }}" alt="reclub" class="size-5">
+                            <span class="text-sm hidden md:inline-block">@banyard-pickleball</span>
+                        </a>
+                    </li>
+                </ul>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>

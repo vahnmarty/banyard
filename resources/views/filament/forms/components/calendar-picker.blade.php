@@ -4,50 +4,68 @@
 >
     <div
         x-data="{
-        state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$getStatePath()}')") }},
-        month: @js($getMonth()),
-        year: @js($getYear()),
-        allMonths: @js($getAllDays()) || [],
+            state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$getStatePath()}')") }},
+            month: @js($getMonth()),
+            year: @js($getYear()),
+            min_date: @js($getMinDate()),
+            max_date: @js($getMaxDate()),
+            allMonths: @js($getAllDays()) || [],
 
-        init() {
-            if (!this.currentMonth) {
-                this.month = this.allMonths?.[0]?.month ?? 1;
+            init() {
+                if (!this.currentMonth) {
+                    this.month = this.allMonths?.[0]?.month ?? 1;
+                }
+            },
+
+            get currentMonth() {
+                return this.allMonths.find(m => m.month === this.month) ?? {
+                    month: this.month,
+                    month_name: '',
+                    days: []
+                };
+            },
+
+            nextMonth() {
+                if (this.month === 12) {
+                    this.month = 1;
+                    this.year++;
+                } else {
+                    this.month++;
+                }
+            },
+
+            prevMonth() {
+                if (this.month === 1) {
+                    this.month = 12;
+                    this.year--;
+                } else {
+                    this.month--;
+                }
+            },
+
+            isDisabled(day) {
+                if (!day) return true;
+
+                const date = new Date(this.year, this.month - 1, day);
+
+                const [minY, minM, minD] = this.min_date.split('-').map(Number);
+                const [maxY, maxM, maxD] = this.max_date.split('-').map(Number);
+
+                const min = new Date(minY, minM - 1, minD);
+                const max = new Date(maxY, maxM - 1, maxD);
+
+                return date < min || date > max;
+            },
+
+            selectDate(day) {
+                if (!day) return;
+
+                if (this.isDisabled(day)) return;
+
+                this.state = `${this.year}-${String(this.month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             }
-        },
-
-        get currentMonth() {
-            return this.allMonths.find(m => m.month === this.month) ?? {
-                month: this.month,
-                month_name: '',
-                days: []
-            };
-        },
-
-        nextMonth() {
-            if (this.month === 12) {
-                this.month = 1;
-                this.year++;
-            } else {
-                this.month++;
-            }
-        },
-
-        prevMonth() {
-            if (this.month === 1) {
-                this.month = 12;
-                this.year--;
-            } else {
-                this.month--;
-            }
-        },
-
-        selectDate(day) {
-            if (!day) return;
-
-            this.state = `${this.year}-${String(this.month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        }
-    }"
-    x-init="init()"
+        }"
+        x-init="init()"
         class="space-y-4"
     >
 
@@ -100,7 +118,13 @@
         <div class="grid grid-cols-7 gap-px bg-gray-200 text-sm shadow-sm ring-1 ring-gray-200">
 
             <template x-for="(day, index) in currentMonth.days" :key="index">
-                <div class="h-10 flex items-center justify-center bg-white">
+                <div
+                    class="h-10 flex items-center justify-center"
+                    :class="{
+                        'bg-white': !isDisabled(day),
+                        'bg-gray-50': isDisabled(day)
+                    }"
+                >
 
                     <!-- EMPTY CELL -->
                     <template x-if="day === null">
@@ -111,9 +135,12 @@
                     <template x-if="day !== null">
                         <button
                             type="button"
-                            class="w-full h-full hover:bg-gray-100"
                             @click="selectDate(day)"
+                            :disabled="isDisabled(day)"
+                            class="w-full h-full"
                             :class="{
+                                'hover:bg-gray-100 hover:text-primary-500': !isDisabled(day),
+                                'text-gray-300 cursor-not-allowed': isDisabled(day),
                                 'bg-primary-500 text-white': state === `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`
                             }"
                             x-text="day"

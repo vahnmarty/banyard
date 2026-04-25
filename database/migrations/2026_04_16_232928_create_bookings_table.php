@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->uuid('uuid');
             $table->date('date');
             $table->time('time');
             $table->string('name');
