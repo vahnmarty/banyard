@@ -128,6 +128,9 @@ new class extends Component implements HasSchemas
             }
 
             DB::commit();
+
+            return redirect()->route('view-appointment', $app->uuid);
+
         } catch (\Throwable $th) {
 
             DB::rollBack();
