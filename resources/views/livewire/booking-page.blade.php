@@ -115,6 +115,7 @@ new class extends Component implements HasSchemas
             $app = new Appointment;
             $app->name = $data['name'];
             $app->email = $data['email'];
+            $app->date = $data['date'];
             $app->save();
 
             foreach($data['time'] as $time)
