@@ -4,7 +4,7 @@
 Your booking has been confirmed.
 
 **Date**&nbsp;
-{{ $app->getDate()->format('F d, Y (l)') }}
+{{ $app->date->format('F d, Y (l)') }}
 
 **Time**&nbsp;
 {{ $app->bookings->map->getFormattedTime()->join(', ') }}
