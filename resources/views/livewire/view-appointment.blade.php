@@ -98,6 +98,10 @@ new class extends Component
                             <p class="text-success-700  text-xl">Your appointment has been confirmed.</p>
                             @endif
                         </div>
+
+                        <div class="mt-8 border-t pt-8">
+                            <x-filament::button tag="a" href="{{ route('schedule') }}">View Schedule</x-filament::button>
+                        </div>
                     </div>
                 </div>
 

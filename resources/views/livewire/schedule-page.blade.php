@@ -76,7 +76,7 @@ new class extends Component
     public function getWeekDays()
     {
         $startOfWeek = new DateTime();
-        $startOfWeek->modify('sunday last week');
+        $startOfWeek->modify('monday this week');
 
         $days = [];
 
@@ -111,13 +111,11 @@ new class extends Component
     {
         $today = new DateTime();
 
-        // First day of the week (Monday)
         $startOfWeek = clone $today;
-        $startOfWeek->modify('sunday last week');
+        $startOfWeek->modify('monday this week');
 
-        // Last day of the week (Sunday)
         $endOfWeek = clone $today;
-        $endOfWeek->modify('saturday this week');
+        $endOfWeek->modify('sunday this week');
 
         return [$startOfWeek->format('Y-m-d'), $endOfWeek->format('Y-m-d')];
     }
@@ -135,7 +133,7 @@ new class extends Component
                         <a href="{{ url('/') }}" class="font-bold text-xl md:text-2xl">Banyard Pickleball</a>
 
                         <div>
-                            <x-filament::button tag="a" target="_blank" href="https://calendly.com/vahnmarty/banyard-pickleball">Book Now</x-filament::button>
+                            <x-filament::button tag="a" target="_blank" href="{{ route('book') }}">Book Now</x-filament::button>
                         </div>
                     </header>
                 </div>
