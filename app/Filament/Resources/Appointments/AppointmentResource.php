@@ -43,7 +43,7 @@ class AppointmentResource extends Resource
             TextEntry::make('bookings.formatted_time')
                 ->label('Time')
                 ->bulleted(),
-            TextEntry::make('confirmed_at')->dateTime('F ,d Y h:i a'),
+            TextEntry::make('confirmed_at')->dateTime('F d, Y h:i a'),
         ]);
 }
 
