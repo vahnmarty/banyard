@@ -29,6 +29,8 @@ new class extends Component
 
         <div>
 
+            @include('partials.header')
+
             <div class="max-w-6xl mx-auto px-3 md:px-8 pt-8">
 
                 @if($app->isExpired())
