@@ -15,7 +15,7 @@ class Appointment extends Model
 
     public function bookings()
     {
-        return $this->hasMany(Booking::class);
+        return $this->hasMany(Booking::class)->orderBy('time');
     }
 
     public function booking()

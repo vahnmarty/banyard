@@ -2,6 +2,8 @@
 
 use App\Filament\Forms\Components\CalendarPicker;
 use App\Filament\Forms\Components\CheckboxListButton;
+use App\Mail\AppointmentCreated;
+use App\Mail\NewAppointmentAlert;
 use App\Models\Appointment;
 use App\Models\Booking;
 use App\Models\TimeSlot;
@@ -16,6 +18,7 @@ use Illuminate\Contracts\View\View;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 new class extends Component implements HasSchemas
 {
@@ -127,6 +130,9 @@ new class extends Component implements HasSchemas
                 $booking->save();
             }
 
+            Mail::to(config('mail.to.address'), config('mail.to.name'))->send(new NewAppointmentAlert($app));
+            Mail::to($data['email'])->send(new AppointmentCreated($app));
+
             DB::commit();
 
             return redirect()->route('view-appointment', $app->uuid);
@@ -145,18 +151,7 @@ new class extends Component implements HasSchemas
 
         <div>
 
-            <div class="bg-white border-b shadow-sm">
-                <div class="max-w-6xl mx-auto px-6 md:px-8">
-                    <header class="flex justify-between py-6 items-center">
-                        <a href="{{ url('/') }}" class="font-bold text-xl md:text-2xl">Banyard Pickleball</a>
-
-                        <div>
-
-                        </div>
-                    </header>
-                </div>
-
-            </div>
+            @include('partials.header')
 
             <div class="max-w-6xl mx-auto px-3 md:px-8 pt-8">
 

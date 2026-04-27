@@ -31,4 +31,9 @@ class Booking extends Model
     {
         return $this->getFormattedTime();
     }
+
+    public function scopeConfirmed($query)
+    {
+        return $query->whereNotNull('confirmed_at');
+    }
 }

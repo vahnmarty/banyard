@@ -3,11 +3,13 @@
 namespace App\Filament\Resources\Appointments\Pages;
 
 use App\Filament\Resources\Appointments\AppointmentResource;
+use App\Mail\AppointmentConfirmed;
 use App\Models\Appointment;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Support\Facades\Mail;
 
 class ViewAppointment extends ViewRecord
 {
@@ -33,6 +35,8 @@ class ViewAppointment extends ViewRecord
                         $booking->confirmed_at = now();
                         $booking->save();
                     }
+
+                    Mail::to($record->email, $record->name)->send(new AppointmentConfirmed($record));
 
                     Notification::make()
                         ->title('Booking has been confirmed!')

@@ -58,7 +58,7 @@ new class extends Component
         {
             foreach($days as $date)
             {
-                $booking = Booking::where('date', $date)->where('time', $slot->time)->first();
+                $booking = Booking::where('date', $date)->where('time', $slot->time)->confirmed()->first();
 
                 if($booking){
                     $array[$slot->time][] = $booking->toArray();
@@ -127,18 +127,7 @@ new class extends Component
 
         <div>
 
-            <div class="bg-white border-b shadow-sm">
-                <div class="max-w-6xl mx-auto px-6 md:px-8">
-                    <header class="flex justify-between py-6 items-center">
-                        <a href="{{ url('/') }}" class="font-bold text-xl md:text-2xl">Banyard Pickleball</a>
-
-                        <div>
-                            <x-filament::button tag="a" target="_blank" href="{{ route('book') }}">Book Now</x-filament::button>
-                        </div>
-                    </header>
-                </div>
-
-            </div>
+            @include('partials.header')
 
             <div class="max-w-6xl mx-auto px-6 md:px-8 pt-8">
 

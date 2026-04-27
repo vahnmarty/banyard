@@ -80,6 +80,9 @@ new class extends Component
                             <x-filament::icon icon="heroicon-o-user-circle" class="text-primary-600 size-8"/>
                             <div class="text-lg">
                                 <span>{{ $app->name . " ({$app->email})" }}</span>
+                                @if(!$app->isConfirmed())
+                                <span class="text-success-600 font-semibold text-sm italic">An email has been sent to this email address.</span>
+                                @endif
                             </div>
                         </div>
 
