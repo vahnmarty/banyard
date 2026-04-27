@@ -62,7 +62,7 @@ new class extends Component
                     <div class="space-y-4 mt-8">
                         <div class="flex gap-4 items-center">
                             <x-filament::icon icon="heroicon-o-calendar-days" class="text-primary-600 size-8"/>
-                            <p class="text-lg">{{ $app->getDate()->format('F d, Y (l)'); }}</p>
+                            <p class="text-lg">{{ $app->date->format('F d, Y (l)'); }}</p>
                         </div>
                         <div class="flex gap-4 items-start">
                             <x-filament::icon icon="heroicon-o-clock" class="text-primary-600 size-8"/>
