@@ -13,6 +13,10 @@ class Appointment extends Model
 
     protected $guarded  = [];
 
+    protected $casts = [
+        'date' => 'date'
+    ];
+
     public function bookings()
     {
         return $this->hasMany(Booking::class)->orderBy('time');
@@ -21,13 +25,6 @@ class Appointment extends Model
     public function booking()
     {
         return $this->hasOne(Booking::class);
-    }
-
-    public function getDate()
-    {
-        $booking = $this->bookings()->first();
-
-        return $booking->date;
     }
 
     public function isPending()
@@ -47,7 +44,7 @@ class Appointment extends Model
 
     public function isExpired()
     {
-        $date = $this->getDate();
+        $date = $this->date;
 
         if (!$date) {
             return false; // or true depending on your logic

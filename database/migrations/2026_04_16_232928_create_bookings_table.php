@@ -17,7 +17,7 @@ return new class extends Migration
             $table->uuid('uuid');
             $table->date('date');
             $table->time('time');
-            $table->decimal('price', 5, 2);
+            $table->decimal('price', 5, 2)->nullable();
             $table->string('name');
             $table->string('email');
             $table->string('phone')->nullable();
