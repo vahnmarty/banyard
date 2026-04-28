@@ -58,7 +58,7 @@ new class extends Component implements HasSchemas
                                 if(filled($date)){
                                     $bookedTimes = Booking::where('date', $date)
                                         ->get()
-                                        ->pluck('time')
+                                        ->pluck('time', 'time')
                                         ->toArray();
 
                                     $slots =  TimeSlot::active()
@@ -131,10 +131,12 @@ new class extends Component implements HasSchemas
                 $booking->save();
             }
 
+            DB::commit();
+
             Mail::to(config('mail.receiver.address'))->send(new NewAppointmentAlert($app));
             Mail::to($data['email'])->send(new AppointmentCreated($app));
 
-            DB::commit();
+
 
             return redirect()->route('view-appointment', $app->uuid);
 
@@ -148,6 +150,18 @@ new class extends Component implements HasSchemas
 ?>
 
 <div>
+
+    <x-slot name="meta">
+            <meta property="og:title" content="Pickleball Schedule">
+            <meta property="og:description" content="View available time slots and book your court.">
+            <meta property="og:image" content="{{ url('/og-image.png') }}">
+            <meta property="og:url" content="{{ url('/schedule') }}">
+            <meta property="og:type" content="website">
+
+            <meta name="twitter:card" content="summary_large_image">
+            <meta name="twitter:title" content="Pickleball Schedule">
+            <meta name="twitter:image" content="{{ url('/og-image.png') }}">
+        </x-slot>
     <div class="bg-neutral-100">
 
         <div>
