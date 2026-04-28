@@ -120,7 +120,7 @@ return [
     ],
 
     'receiver' => [
-        'address' => env('MAIL_TO_ADDRESS'),
+        'address' => env('MAIL_RECEIVER_ADDRESS'),
     ],
 
 ];
