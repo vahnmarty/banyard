@@ -131,7 +131,7 @@ new class extends Component implements HasSchemas
                 $booking->save();
             }
 
-            Mail::to(config('mail.to.address'), config('mail.to.name'))->send(new NewAppointmentAlert($app));
+            Mail::to(config('mail.receiver.address'))->send(new NewAppointmentAlert($app));
             Mail::to($data['email'])->send(new AppointmentCreated($app));
 
             DB::commit();

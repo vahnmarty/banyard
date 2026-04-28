@@ -25,10 +25,12 @@ class ViewAppointment extends ViewRecord
                 ->requiresConfirmation()
                 ->hidden(fn(Appointment $record) => $record->isConfirmed() || $record->isCancelled())
                 ->action(function(Appointment $record){
+
+
                     $record->confirmed_at = now();
                     $record->save();
 
-                    // Email Notify
+                    Mail::to($record->email)->send(new AppointmentConfirmed($record));
 
                     foreach($record->bookings as $booking)
                     {
@@ -36,7 +38,6 @@ class ViewAppointment extends ViewRecord
                         $booking->save();
                     }
 
-                    Mail::to($record->email, $record->name)->send(new AppointmentConfirmed($record));
 
                     Notification::make()
                         ->title('Booking has been confirmed!')
