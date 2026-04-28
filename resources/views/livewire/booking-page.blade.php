@@ -57,11 +57,13 @@ new class extends Component implements HasSchemas
 
                                 if(filled($date)){
                                     $bookedTimes = Booking::where('date', $date)
+                                        ->get()
                                         ->pluck(DB::raw("TIME_FORMAT(time, '%H:%i')"))
                                         ->toArray();
 
                                     $slots = TimeSlot::active()
                                         ->whereNotIn(DB::raw("TIME_FORMAT(time, '%H:%i')"), $bookedTimes)
+                                        ->get()
                                         ->pluck('formatted_time', 'time')
                                         ->toArray();
 
