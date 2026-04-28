@@ -56,16 +56,27 @@ new class extends Component implements HasSchemas
                                 $date = $schemaGet('date');
 
                                 if(filled($date)){
-                                    $bookedTimes = Booking::where('date', $date)
-                                        ->get()
-                                        ->pluck('time', 'time')
-                                        ->toArray();
+                                    // $bookedTimes = Booking::where('date', $date)
+                                    //     ->get()
+                                    //     ->pluck('time', 'time')
+                                    //     ->toArray();
 
-                                    $slots =  TimeSlot::active()
-                                        ->whereNotIn('time', $bookedTimes)
-                                        ->get()
-                                        ->pluck('formatted_time', 'time')
-                                        ->toArray();
+                                    // $slots =  TimeSlot::active()
+                                    //     ->whereNotIn('time', $bookedTimes)
+                                    //     ->get()
+                                    //     ->pluck('formatted_time', 'time')
+                                    //     ->toArray();
+
+                                    // return $slots;
+
+                                    $slots = TimeSlot::active()
+                                    ->whereNotIn('time', function ($query) use ($date) {
+                                        $query->select('time')
+                                            ->from('bookings')
+                                            ->where('date', $date);
+                                    })
+                                    ->pluck('formatted_time', 'time')
+                                    ->toArray();
 
                                     return $slots;
                                 }
