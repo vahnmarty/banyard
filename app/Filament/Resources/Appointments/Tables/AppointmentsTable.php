@@ -9,6 +9,8 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class AppointmentsTable
@@ -51,13 +53,17 @@ class AppointmentsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TernaryFilter::make('confirmed_at')
+                    ->nullable()
+                    ->label('Confirmed')
+                    ->default(false)
             ])
             ->recordActions([
                 ViewAction::make(),
             ])
             ->toolbarActions([
 
-            ]);
+            ])
+            ->paginated(['all', 100, 50, 10]);
     }
 }
