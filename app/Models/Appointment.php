@@ -39,7 +39,7 @@ class Appointment extends Model
 
     public function isConfirmed()
     {
-        return filled($this->confirmed_at);
+        return filled($this->confirmed_at) && !$this->isCancelled();
     }
 
     public function isExpired()

@@ -56,6 +56,10 @@ class AppointmentsTable
                 TernaryFilter::make('confirmed_at')
                     ->nullable()
                     ->label('Confirmed')
+                    ->default(false),
+                TernaryFilter::make('cancelled_at')
+                    ->nullable()
+                    ->label('Cancelled')
                     ->default(false)
             ])
             ->recordActions([
