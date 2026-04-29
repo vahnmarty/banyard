@@ -13,7 +13,7 @@
 
     @unless(isset($meta))
         <meta property="og:title" content="{{ config('app.name') }}">
-        <meta property="og:image" content="{{ url('/og-image.png') }}">
+        <meta property="og:image" content="{{ asset('img/og-image.png') }}">
         <meta property="og:type" content="website">
     @endunless
 
