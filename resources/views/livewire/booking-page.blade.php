@@ -56,10 +56,10 @@ new class extends Component implements HasSchemas
                                 $date = $schemaGet('date');
 
                                 if(filled($date)){
-                                    $bookedTimes = Booking::where('date', $date)
-                                        ->get()
-                                        ->pluck('time')
-                                        ->toArray();
+                                    // $bookedTimes = Booking::where('date', $date)
+                                    //     ->get()
+                                    //     ->pluck('time')
+                                    //     ->toArray();
 
                                     // $slots =  TimeSlot::active()
                                     //     ->whereNotIn('time', $bookedTimes)
@@ -68,14 +68,15 @@ new class extends Component implements HasSchemas
                                     //     ->toArray();
 
                                     $slots = TimeSlot::active()
-                                    ->whereNotIn(DB::raw("TIME_FORMAT(time, '%H:%i:%s')"), function ($query) use ($date) {
-                                        $query->select(DB::raw("TIME_FORMAT(time, '%H:%i:%s')"))
-                                            ->from('bookings')
-                                            ->where('date', $date);
-                                    })
-                                    ->get()
-                                    ->pluck('formatted_time', 'time')
-                                    ->toArray();
+                                        ->whereNotIn(DB::raw("TIME_FORMAT(time, '%H:%i:%s')"), function ($query) use ($date) {
+                                            $query->select(DB::raw("TIME_FORMAT(time, '%H:%i:%s')"))
+                                                ->from('bookings')
+                                                ->where('date', $date)
+                                                ->whereNull('cancelled_at');
+                                        })
+                                        ->get()
+                                        ->pluck('formatted_time', 'time')
+                                        ->toArray();
 
                                     return $slots;
                                 }
