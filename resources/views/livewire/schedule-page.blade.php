@@ -249,15 +249,6 @@ new class extends Component
                                             @foreach($bookingArray as $ii => $booking)
                                                 @php
                                                     $isToday =  ($ii == $index);
-
-                                                    if(isset($booking)){
-                                                        $isToday = Carbon::parse($booking['date'])->format('Y-m-d') == date('Y-m-d');
-                                                    }else{
-                                                        if($this->next_counter > 0 || $this->prev_counter > 0){
-                                                            $isToday = false;
-                                                        }
-                                                    }
-
                                                 @endphp
 
                                                 <td class="p-3 text-center {{ $isToday ? 'bg-success-100' : '' }}">
