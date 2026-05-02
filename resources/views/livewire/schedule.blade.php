@@ -4,12 +4,17 @@ use App\Models\Booking;
 use App\Models\TimeSlot;
 use Livewire\Component;
 use Carbon\Carbon;
+use Livewire\Attributes\Url;
 
 new class extends Component
 {
     public $time_slots;
 
-    public $day1, $day7;
+    #[Url(keep: true)]
+    public $day1;
+
+    #[Url(keep: true)]
+    public $day7;
 
     public $bookings = [];
 

@@ -44,6 +44,8 @@ class ViewAppointment extends ViewRecord
                         ->title('Booking has been confirmed!')
                         ->success()
                         ->send();
+
+                    return redirect()->to(AppointmentResource::getUrl());
                 }),
             Action::make('resend')
                 ->label("Resend Confirmation")

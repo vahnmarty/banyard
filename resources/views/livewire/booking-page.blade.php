@@ -1,5 +1,6 @@
 <?php
 
+use AbanoubNassem\FilamentGRecaptchaField\Forms\Components\GRecaptcha;
 use App\Filament\Forms\Components\CalendarPicker;
 use App\Filament\Forms\Components\CheckboxListButton;
 use App\Mail\AppointmentCreated;
@@ -109,6 +110,7 @@ new class extends Component implements HasSchemas
                     ->required()
                     ->email()
                     ->placeholder("Please enter a valid email address"),
+                GRecaptcha::make('captcha')
             ])
             ->statePath('data');
     }
@@ -162,17 +164,22 @@ new class extends Component implements HasSchemas
 
 <div>
 
-    <x-slot name="meta">
-            <meta property="og:title" content="Pickleball Schedule">
-            <meta property="og:description" content="View available time slots and book your court.">
-            <meta property="og:image" content="{{ url('/og-image.png') }}">
-            <meta property="og:url" content="{{ url('/schedule') }}">
-            <meta property="og:type" content="website">
+    @push('scripts')
+     <script src="https://www.google.com/recaptcha/api.js"></script>
+    @endpush
 
-            <meta name="twitter:card" content="summary_large_image">
-            <meta name="twitter:title" content="Pickleball Schedule">
-            <meta name="twitter:image" content="{{ url('/og-image.png') }}">
-        </x-slot>
+    <x-slot name="meta">
+        <meta property="og:title" content="Pickleball Schedule">
+        <meta property="og:description" content="View available time slots and book your court.">
+        <meta property="og:image" content="{{ url('/og-image.png') }}">
+        <meta property="og:url" content="{{ url('/schedule') }}">
+        <meta property="og:type" content="website">
+
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Pickleball Schedule">
+        <meta name="twitter:image" content="{{ url('/og-image.png') }}">
+    </x-slot>
+
     <div class="bg-neutral-100">
 
         <div>
@@ -193,7 +200,10 @@ new class extends Component implements HasSchemas
                         {{  $this->form }}
 
                         <div class="mt-8">
-                            <x-filament::button type="submit" size="xl">Submit</x-filament::button>
+                            <x-filament::button type="submit" size="xl" class="g-recaptcha"
+        data-sitekey="reCAPTCHA_site_key"
+        data-callback='onSubmit'
+        data-action='submit'>Submit</x-filament::button>
                         </div>
                     </form>
                 </div>

@@ -4,32 +4,47 @@ use App\Models\Booking;
 use App\Models\TimeSlot;
 use Livewire\Component;
 use Carbon\Carbon;
+use Livewire\Attributes\Url;
 
 new class extends Component
 {
     public $time_slots;
 
-    public $day1, $day7;
+    public $day1;
+
+    public $day7;
 
     public $bookings = [];
 
-    public $days;
+    public $header_days;
 
     public $index = 0;
+
+    public $next_counter = 0;
+    public $prev_counter = 0;
+    public $next_counter_max = 3;
+    public $prev_counter_max = 1;
 
     public function mount()
     {
         $this->time_slots = $this->getTimeSlots();
 
-        $days = $this->getDaysFromCurrentWeek();
+        $this->initCalendarDates();
 
-        $this->day1 = $days[0];
-        $this->day7 = $days[1];
+        $this->header_days = $this->getDaysArray();
 
-        $this->bookings = $this->getBookings();
+        $this->generateBookings();
 
-        $this->days = $this->getDaysArray();
+    }
 
+    public function initCalendarDates()
+    {
+        if(!$this->day1 && !$this->day7){
+            $days = $this->getDaysFromCurrentWeek();
+
+            $this->day1 = $days[0];
+            $this->day7 = $days[1];
+        }
     }
 
     public function getDaysArray()
@@ -47,10 +62,11 @@ new class extends Component
         return $array;
     }
 
-    public function getBookings()
+    public function generateBookings()
     {
-        $days = $this->getWeekDays();
         $time_slots = TimeSlot::active()->get();
+
+        $days = $this->getWeekDays();
 
         $array = [];
 
@@ -70,26 +86,31 @@ new class extends Component
 
         }
 
-        return $array;
+        $this->bookings =  $array;
     }
 
     public function getWeekDays()
     {
-        $startOfWeek = new DateTime();
-        $startOfWeek->modify('monday this week');
+        $day1 = $this->day1;
+        $day7 = $this->day7;
+
+        $start = new DateTime($day1);
+        $end = new DateTime($day7);
 
         $days = [];
+        $i = 0;
 
-        for ($i = 0; $i < 7; $i++) {
-            $date = $startOfWeek->format('Y-m-d');
+        while ($start <= $end) {
+            $date = $start->format('Y-m-d');
 
             $days[] = $date;
 
-            $startOfWeek->modify('+1 day');
-
-            if($date == date('Y-m-d')){
+            if ($date == date('Y-m-d')) {
                 $this->index = $i;
             }
+
+            $start->modify('+1 day');
+            $i++;
         }
 
         return $days;
@@ -119,6 +140,48 @@ new class extends Component
 
         return [$startOfWeek->format('Y-m-d'), $endOfWeek->format('Y-m-d')];
     }
+
+    public function nextWeek()
+    {
+        if($this->next_counter < $this->next_counter_max)
+        {
+            $day1 = $this->day1;
+            $day7 = $this->day7;
+
+            $this->day1 = Carbon::parse($day1)->addDays(7)->format('Y-m-d');
+            $this->day7 = Carbon::parse($day7)->addDays(7)->format('Y-m-d');
+            $this->header_days = $this->getDaysArray();
+
+            $this->generateBookings();
+
+            $this->next_counter++;
+            $this->prev_counter_max++;
+
+        }
+
+        return;
+
+    }
+
+    public function prevWeek()
+    {
+        if($this->prev_counter < $this->prev_counter_max)
+        {
+            $day1 = $this->day1;
+            $day7 = $this->day7;
+
+            $this->day1 = Carbon::parse($day1)->subDays(7)->format('Y-m-d');
+            $this->day7 = Carbon::parse($day7)->subDays(7)->format('Y-m-d');
+            $this->header_days = $this->getDaysArray();
+
+            $this->generateBookings();
+
+            $this->prev_counter++;
+            $this->next_counter_max++;
+        }
+
+        return;
+    }
 };
 ?>
 
@@ -136,8 +199,17 @@ new class extends Component
                         <x-filament::icon icon="heroicon-o-calendar-days" class="size-8 md:size-10 text-info-500"/>
                         <h1 class="font-bold text-xl md:text-3xl">Schedule</h1>
                     </div>
-                    <p class="mt-4 font-semibold">{{ date('F d', strtotime($day1)) }} - {{ date('F d', strtotime($day7)) }}</p>
-                    <div class="border-t-4 mt-2 border-info-500 w-10"></div>
+                    <div class="flex items-center mt-4 gap-x-4">
+                        <div>
+                            <x-filament::icon-button wire:click="prevWeek()" icon="heroicon-o-chevron-left" class="text-neutral-400"/>
+                        </div>
+                        <div>
+                            <p class="font-semibold">{{ date('F d', strtotime($day1)) }} - {{ date('F d', strtotime($day7)) }}</p>
+                        </div>
+                        <div>
+                            <x-filament::icon-button wire:click="nextWeek()"  icon="heroicon-o-chevron-right"/>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="mt-8 mb-16">
@@ -155,7 +227,7 @@ new class extends Component
                                             </div>
                                         </th>
 
-                                        @foreach($days as $lDay)
+                                        @foreach($header_days as $lDay)
                                             <th class="p-4 text-center font-medium
                                                 {{ $lDay['active'] ? 'bg-success-500 text-white rounded-t-xl' : 'text-gray-600' }}">
                                                 <div>{{ $lDay['display'] }}</div>
@@ -170,15 +242,22 @@ new class extends Component
                                     @foreach($bookings as $time => $bookingArray)
                                         <tr class="hover:bg-slate-50 transition">
 
-                                            {{-- TIME --}}
                                             <td class="p-4 font-medium text-gray-600 sticky left-0 bg-white z-10">
                                                 {{ Carbon::parse($time)->format('h:i A') }}
                                             </td>
 
-                                            {{-- CELLS --}}
                                             @foreach($bookingArray as $ii => $booking)
                                                 @php
                                                     $isToday =  ($ii == $index);
+
+                                                    if(isset($booking)){
+                                                        $isToday = Carbon::parse($booking['date'])->format('Y-m-d') == date('Y-m-d');
+                                                    }else{
+                                                        if($this->next_counter > 0 || $this->prev_counter > 0){
+                                                            $isToday = false;
+                                                        }
+                                                    }
+
                                                 @endphp
 
                                                 <td class="p-3 text-center {{ $isToday ? 'bg-success-100' : '' }}">
