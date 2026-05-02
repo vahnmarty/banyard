@@ -25,6 +25,8 @@ new class extends Component
     public $next_counter_max = 3;
     public $prev_counter_max = 1;
 
+    public $init_week = true;
+
     public function mount()
     {
         $this->time_slots = $this->getTimeSlots();
@@ -76,10 +78,14 @@ new class extends Component
             {
                 $booking = Booking::where('date', $date)->where('time', $slot->time)->confirmed()->first();
 
+
                 if($booking){
-                    $array[$slot->time][] = $booking->toArray();
+                    $initArray = $booking->toArray();
+                    $initArray['active'] = $booking->date->isToday();
+                    $array[$slot->time][] = $initArray;
                 }else{
-                    $array[$slot->time][] = null;
+                    $isActive = $date == date('Y-m-d');
+                    $array[$slot->time][] = ['active' => $isActive];
                 }
             }
 
@@ -248,20 +254,20 @@ new class extends Component
 
                                             @foreach($bookingArray as $ii => $booking)
                                                 @php
-                                                    $isToday =  ($ii == $index);
+                                                    $isHighlight = $booking['active'];
                                                 @endphp
 
-                                                <td class="p-3 text-center {{ $isToday ? 'bg-success-100' : '' }}">
+                                                <td class="p-3 text-center {{ $isHighlight ? 'bg-success-100' : '' }}">
 
                                                     @if($booking)
                                                         <div class="
                                                             block px-3 py-1.5 rounded-lg text-xs font-medium
-                                                            {{ $isToday
+                                                            {{ $isHighlight
                                                                 ? 'bg-success-300 text-gray-900 shadow'
                                                                 : 'bg-info-50 text-info-700 border border-info-100'
                                                             }}
                                                         ">
-                                                            {{ $booking['name'] }}
+                                                            {{ $booking['name'] ?? "-" }}
                                                         </div>
                                                     @else
                                                         <span class="text-gray-300 text-xs">—</span>
