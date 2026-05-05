@@ -110,7 +110,6 @@ new class extends Component implements HasSchemas
                     ->required()
                     ->email()
                     ->placeholder("Please enter a valid email address"),
-                GRecaptcha::make('captcha')
             ])
             ->statePath('data');
     }
