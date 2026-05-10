@@ -28,7 +28,8 @@ class AppointmentsTable
                     ->numeric(),
                 TextColumn::make('date')
                     ->label('Date')
-                    ->dateTime('F d, Y'),
+                    ->dateTime('F d, Y')
+                    ->sortable(),
                 TextColumn::make('bookings.formatted_time')
                     ->label('Time'),
                 TextColumn::make('confirmed_at')
