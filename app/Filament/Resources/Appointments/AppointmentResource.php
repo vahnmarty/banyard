@@ -39,7 +39,9 @@ class AppointmentResource extends Resource
             TextEntry::make('club')
                 ->placeholder('No club.'),
             TextEntry::make('email'),
-            TextEntry::make('date')->dateTime('F ,d Y'),
+            TextEntry::make('date')
+                ->sortable()
+                ->dateTime('F ,d Y'),
             TextEntry::make('bookings.formatted_time')
                 ->label('Time')
                 ->bulleted(),
