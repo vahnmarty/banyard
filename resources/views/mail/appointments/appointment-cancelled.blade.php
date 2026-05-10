@@ -3,6 +3,12 @@
 
 We regret to inform you that your booking has been Cancelled.
 
+**Reason**&nbsp;
+{{ $app->cancellation_reason ?? 'N/A' }}
+
+**Notes**&nbsp;
+{{ $app->notes ?? 'N/A' }}
+
 **Date**&nbsp;
 {{ $app->date->format('F d, Y (l)') }}
 

@@ -8,6 +8,8 @@ use App\Mail\AppointmentConfirmed;
 use App\Models\Appointment;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Support\Facades\Mail;
@@ -66,11 +68,25 @@ class ViewAppointment extends ViewRecord
             Action::make('cancel')
                 ->color('danger')
                 ->hidden(fn(Appointment $record) => $record->isConfirmed() || $record->isCancelled())
+                ->schema([
+                    Select::make('cancellation_reason')
+                        ->label('Cancellation Reason')
+                        ->options([
+                            'client_cancelled' => 'Client Cancelled',
+                            'no_show' => 'No Show',
+                            'other' => 'Other',
+                        ])
+                        ->required(),
+                    Textarea::make('notes')
+                        ->label('Notes'),
+                ])
                 ->requiresConfirmation()
-                ->action(function(Appointment $record){
+                ->action(function(Appointment $record, array $data){
 
 
                     $record->cancelled_at = now();
+                    $record->cancellation_reason = $data['cancellation_reason'];
+                    $record->notes = $data['notes'] ?? $record->notes;
                     $record->save();
 
                     Mail::to($record->email)->send(new AppointmentCancelled($record));

@@ -40,7 +40,7 @@ class AppointmentResource extends Resource
                 ->placeholder('No club.'),
             TextEntry::make('email'),
             TextEntry::make('date')
-                ->dateTime('F ,d Y'),
+                ->dateTime('F d, Y'),
             TextEntry::make('bookings.formatted_time')
                 ->label('Time')
                 ->bulleted(),
