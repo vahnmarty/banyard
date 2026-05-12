@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Appointment;
 use App\Models\Booking;
 use App\Models\TimeSlot;
 use Livewire\Component;
@@ -26,6 +27,10 @@ new class extends Component
     public $prev_counter_max = 1;
 
     public $init_week = true;
+
+    public ?Booking $selected_booking;
+
+    public ?Appointment $appointment;
 
     public function mount()
     {
@@ -188,6 +193,20 @@ new class extends Component
 
         return;
     }
+
+    public function showBooking($id = null)
+    {
+        $booking = Booking::with('appointment')->find($id);
+
+        if($booking)
+        {
+            $this->selected_booking = $booking;
+
+            $this->appointment = $booking->appointment;
+
+            $this->dispatch('open-modal', id: 'show-booking');
+        }
+    }
 };
 ?>
 
@@ -260,7 +279,8 @@ new class extends Component
                                                 <td class="p-3 text-center {{ $isHighlight ? 'bg-success-100' : '' }}">
 
                                                     @if($booking)
-                                                        <div class="
+                                                        <div wire:click="showBooking({{ $booking['id'] ?? null }})"
+                                                            class=" cursor-pointer
                                                             block px-3 py-1.5 rounded-lg text-xs font-medium
                                                             {{ $isHighlight
                                                                 ? 'bg-success-300 text-gray-900 shadow'
@@ -282,6 +302,40 @@ new class extends Component
                                 </tbody>
 
                             </table>
+
+                            <x-filament::modal id="show-booking" slide-over>
+                                <x-slot name="heading">
+                                    View Booking
+                                </x-slot>
+                                @if($appointment)
+                                <div class="space-y-4">
+                                    <div>
+                                        <legend class="font-semibold">Name:</legend>
+                                        <p>{{ $appointment->name }}</p>
+                                    </div>
+
+                                    <div>
+                                        <legend class="font-semibold">Email:</legend>
+                                        <p>{{ $appointment->email }}</p>
+                                    </div>
+
+                                    <div>
+                                        <legend class="font-semibold">Club:</legend>
+                                        <p>{{ $appointment->club  ?? 'N/A'}}</p>
+                                    </div>
+
+                                    <div>
+                                        <legend class="font-semibold">Date:</legend>
+                                        <p>{{ $appointment->date->format('F d, Y') }}</p>
+                                    </div>
+
+                                    <div>
+                                        <legend class="font-semibold">Time:</legend>
+                                        <p>{{ $selected_booking->formatted_time }}</p>
+                                    </div>
+                                </div>
+                                @endif
+                            </x-filament::modal>
                         </div>
 
                     </div>

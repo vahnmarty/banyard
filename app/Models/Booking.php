@@ -16,6 +16,10 @@ class Booking extends Model
         'date' => 'date'
     ];
 
+    public function appointment()
+    {
+        return $this->belongsTo(Appointment::class);
+    }
 
     public function isConfirmed()
     {
