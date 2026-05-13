@@ -14,6 +14,7 @@ use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Grid;
@@ -74,6 +75,9 @@ class ListAppointments extends ListRecords
                     TextInput::make('name')
                         ->maxLength(72)
                         ->required(),
+                    Toggle::make('exclusive')
+                        ->label('Exclusive Appointment')
+                        ->default(false),
                     TextInput::make('club')
                         ->label('Name of your Club/Group/Organization')
                         ->maxLength(72)
@@ -99,6 +103,7 @@ class ListAppointments extends ListRecords
                             $app->name = $data['name'];
                             $app->email = $data['email'];
                             $app->date = $data['date'];
+                            $app->exclusive = $data['exclusive'] ?? false;
                             $app->save();
 
                             foreach($data['time'] as $time)
@@ -111,6 +116,7 @@ class ListAppointments extends ListRecords
                                 $booking->email = $data['email'];
                                 $booking->club = $data['club'];
                                 $booking->players_count = $data['players_count'];
+                                $booking->exclusive = $data['exclusive'] ?? false;
                                 $booking->save();
                             }
 

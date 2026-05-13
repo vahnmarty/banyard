@@ -279,6 +279,12 @@ new class extends Component
                                                 <td class="p-3 text-center {{ $isHighlight ? 'bg-success-100' : '' }}">
 
                                                     @if($booking)
+                                                        @if(!empty($booking['exclusive']))
+                                                        <div class="flex py-1.5 rounded-lg text-xs font-medium bg-yellow-500 items-center gap-x-1 justify-center text-neutral-700 border-2 border-yellow-600">
+                                                            <x-filament::icon icon="heroicon-o-check-badge" />
+                                                            <span>Exclusive</span>
+                                                        </div>
+                                                        @else
                                                         <div wire:click="showBooking({{ $booking['id'] ?? null }})"
                                                             class=" cursor-pointer
                                                             block px-3 py-1.5 rounded-lg text-xs font-medium
@@ -289,6 +295,7 @@ new class extends Component
                                                         ">
                                                             {{ $booking['name'] ?? "-" }}
                                                         </div>
+                                                        @endif
                                                     @else
                                                         <span class="text-gray-300 text-xs">—</span>
                                                     @endif
