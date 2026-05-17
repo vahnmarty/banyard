@@ -75,6 +75,7 @@ class AppointmentsTable
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->paginated(['all', 100, 50, 10]);
+            ->paginated(['all', 100, 50, 10])
+            ->defaultPaginationPageOption(50);
     }
 }
