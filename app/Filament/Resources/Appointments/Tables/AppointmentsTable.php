@@ -67,7 +67,9 @@ class AppointmentsTable
                 ViewAction::make(),
             ])
             ->toolbarActions([
-
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
             ])
             ->paginated(['all', 100, 50, 10]);
     }
