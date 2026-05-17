@@ -12,6 +12,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class AppointmentsTable
 {
@@ -29,6 +30,9 @@ class AppointmentsTable
                 TextColumn::make('date')
                     ->label('Date')
                     ->dateTime('F d, Y')
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->orderBy('users.date', $direction);
+                    })
                     ->sortable(),
                 TextColumn::make('bookings.formatted_time')
                     ->label('Time'),
